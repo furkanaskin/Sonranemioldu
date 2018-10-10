@@ -1,23 +1,21 @@
 package com.faskn.sonranemioldu.activities
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.bumptech.glide.Glide
 import com.faskn.sonranemioldu.R
+import com.faskn.sonranemioldu.adapters.ViewPagerAdapter
 import com.faskn.sonranemioldu.utils.BaseActivity
-import org.json.JSONArray
+import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
 import org.json.JSONObject
 
 class MainActivity : BaseActivity() {
@@ -27,17 +25,14 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val newsRecyclerView = findViewById<RecyclerView>(R.id.recycler_dashboard)
-        newsRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
-        val url = "http://api.sonraneoldu.com/v2/tags/1/stories"
-
+        val url = "http://api.sonraneoldu.com/v2/tags/"
         val request = JsonObjectRequest(Request.Method.GET, url, null, Response.Listener<JSONObject> { response ->
 
-            val news = response
+            val tabList = response
                     .getJSONArray("data")
 
-            newsRecyclerView.adapter = NewsAdapter(news)
+            val fragmentAdapter = ViewPagerAdapter(supportFragmentManager, tabList)
+            viewpager_main.adapter = fragmentAdapter
         },
                 Response.ErrorListener {
                     Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
@@ -46,49 +41,32 @@ class MainActivity : BaseActivity() {
         Volley.newRequestQueue(this.baseContext).add(request)
         Volley.newRequestQueue(this.baseContext).start()
 
+        setTabs()
+
     }
 
-    class NewsAdapter(val news: JSONArray) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>(){
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.item_dashboard_recycler, parent, false)
-            return NewsViewHolder(view)
+
+    private fun setTabs() {
+        doAsync {
+
+            progress_main.visibility = View.VISIBLE
+            tabs_main.setupWithViewPager(viewpager_main)
+
+            // Add Vertical Gray lines between tab items
+
+            val linearLayout = tabs_main.getChildAt(0) as LinearLayout
+            linearLayout.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
+            val drawable = GradientDrawable()
+            drawable.setColor(Color.GRAY)
+            drawable.setSize(1, 1)
+            linearLayout.dividerPadding = 25
+            linearLayout.dividerDrawable = drawable
+            // Ends here.
         }
 
-        override fun getItemCount(): Int = news.length()
-
-        override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-            holder.bind(news.getJSONObject(position),position)
-        }
-
-        class NewsViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-            fun bind(newsItem: JSONObject, position: Int) {
-//                val baseImgUrl= "https://image-cdn.sonraneoldu.com/images/"
-                val title = view.findViewById(R.id.txt_cover) as TextView
-                val newsImageArray = newsItem.getJSONArray("images").getJSONObject(0)
-                // Kontrol
-                Log.v("qqq",newsImageArray.toString())
-
-                val newsImageBase = newsImageArray.getString("baseUrl")
-
-                val newsImageCover = newsImageArray.getString("name")
-
-                // Kontrol * Success!!
-                Log.v("qqq",newsImageBase.toString()+newsImageCover.toString())
-
-
-                val cover = view.findViewById<ImageView>(R.id.img_cover)
-
-                val newsImageCoverURL = newsImageBase.toString()+newsImageCover.toString()
-
-                Glide
-                        .with(view.context)
-                        .load(newsImageCoverURL)
-                        .into(cover)
-
-                title.text =newsItem["summary"].toString()
-
-            }
+        doAsyncResult {
+            progress_main.visibility = View.GONE
         }
     }
+
 }
