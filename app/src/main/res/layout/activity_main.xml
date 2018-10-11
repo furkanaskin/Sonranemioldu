@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.MainActivity">
 
     <ProgressBar
@@ -12,21 +12,40 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:targetApi="lollipop"
+        app:navigationIcon="@drawable/ic_baseline_menu_24ppx"
+        app:logo="@mipmap/sonraneolduicon" />
+
     <com.google.android.material.tabs.TabLayout
+        android:layout_below="@id/toolbar_main"
         android:id="@+id/tabs_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"
         android:background="@android:color/black"
-        app:tabTextColor="#BEBEBE"
-        app:tabIndicatorColor="@android:color/holo_orange_dark"
-        app:tabSelectedTextColor="@android:color/white"
         app:tabContentStart="2dp"
-        app:tabIndicatorFullWidth="false" />
+        app:tabIndicatorColor="@android:color/holo_orange_dark"
+        app:tabIndicatorHeight="1dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextColor="#BEBEBE" />
 
     <androidx.viewpager.widget.ViewPager
-        android:layout_below="@id/tabs_main"
         android:id="@+id/viewpager_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabs_main" />
+
+    <FrameLayout
+        android:id="@+id/frame_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

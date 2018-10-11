@@ -61,5 +61,6 @@ class MainFragment : BaseFragment() {
 
         Volley.newRequestQueue(this.context).add(request)
         Volley.newRequestQueue(this.context).start()
+
     }
 }

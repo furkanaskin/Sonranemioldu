@@ -3,6 +3,7 @@ package com.faskn.sonranemioldu.activities
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -41,10 +42,11 @@ class MainActivity : BaseActivity() {
         Volley.newRequestQueue(this.baseContext).add(request)
         Volley.newRequestQueue(this.baseContext).start()
 
+        setSupportActionBar(this.findViewById(R.id.toolbar_main))
+
+
         setTabs()
-
     }
-
 
     private fun setTabs() {
         doAsync {
@@ -59,7 +61,7 @@ class MainActivity : BaseActivity() {
             val drawable = GradientDrawable()
             drawable.setColor(Color.GRAY)
             drawable.setSize(1, 1)
-            linearLayout.dividerPadding = 25
+            linearLayout.dividerPadding = 22
             linearLayout.dividerDrawable = drawable
             // Ends here.
         }
@@ -69,4 +71,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.navigation_menu, menu)
+        return true
+    }
 }

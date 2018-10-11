@@ -30,11 +30,15 @@ class MainRecylerAdapter(val news: JSONArray) : RecyclerView.Adapter<MainRecyler
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(newsItem: JSONObject, position: Int) {
-            val title = view.findViewById(R.id.txt_cover) as TextView
+            val txtDescription = view.findViewById(R.id.txt_news_description) as TextView
+            val txtTitle = view.findViewById(R.id.txt_news_title) as TextView
+            val txtCategory = view.findViewById(R.id.txt_news_category) as TextView
+            val cover = view.findViewById<ImageView>(R.id.img_cover)
+
+            val newsCategory = newsItem.getJSONObject("primaryTag").getString("name")
             val newsImageArray = newsItem.getJSONArray("images").getJSONObject(0)
             val newsImageBase = newsImageArray.getString("baseUrl")
             val newsImageCover = newsImageArray.getString("name")
-            val cover = view.findViewById<ImageView>(R.id.img_cover)
             val newsImageCoverURL = newsImageBase.toString() + newsImageCover.toString()
 
             Glide
@@ -43,8 +47,11 @@ class MainRecylerAdapter(val news: JSONArray) : RecyclerView.Adapter<MainRecyler
                     .apply(RequestOptions().centerCrop())
                     .into(cover)
 
-            title.text = newsItem["summary"].toString()
+            txtDescription.text = newsItem["summary"].toString()
+            txtTitle.text = newsItem["title"].toString()
+            txtCategory.text = newsCategory
 
         }
     }
+
 }

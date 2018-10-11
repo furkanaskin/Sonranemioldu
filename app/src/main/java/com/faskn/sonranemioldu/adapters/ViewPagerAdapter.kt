@@ -8,7 +8,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 
-class ViewPagerAdapter(fragmentManager: FragmentManager, val tabsList: JSONArray) : FragmentStatePagerAdapter(fragmentManager) {
+class ViewPagerAdapter(fragmentManager: FragmentManager, private val tabsList: JSONArray) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment {
 
@@ -28,15 +28,13 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, val tabsList: JSONArray
     private fun getTitleFromJSON(pageList: JSONObject): String {
 
         // Get title from api
-        val title = pageList["name"].toString()
-        return title
+        return pageList["name"].toString()
     }
 
     private fun getIDFromJson(pageList: JSONObject): String {
 
         // Get url id from api
-        val JsonID = pageList["id"].toString()
-        return JsonID
+        return pageList["id"].toString()
     }
-
 }
+
