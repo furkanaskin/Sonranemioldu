@@ -21,7 +21,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         tools:targetApi="lollipop"
-        app:navigationIcon="@drawable/ic_baseline_menu_24ppx"
         app:logo="@mipmap/sonraneolduicon" />
 
     <com.google.android.material.tabs.TabLayout
@@ -45,6 +44,7 @@
         android:layout_below="@id/tabs_main" />
 
     <FrameLayout
+        android:layout_alignParentBottom="true"
         android:id="@+id/frame_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

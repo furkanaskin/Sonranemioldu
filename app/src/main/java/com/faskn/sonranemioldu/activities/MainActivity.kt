@@ -42,6 +42,7 @@ class MainActivity : BaseActivity() {
         Volley.newRequestQueue(this.baseContext).add(request)
         Volley.newRequestQueue(this.baseContext).start()
 
+        toolbar_main.setNavigationIcon(R.drawable.ic_baseline_menu_24ppx)
         setSupportActionBar(this.findViewById(R.id.toolbar_main))
 
 

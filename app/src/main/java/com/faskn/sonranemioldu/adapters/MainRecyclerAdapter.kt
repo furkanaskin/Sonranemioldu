@@ -1,5 +1,6 @@
 package com.faskn.sonranemioldu.adapters
 
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,11 @@ import com.faskn.sonranemioldu.R
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MainRecylerAdapter(val news: JSONArray) : RecyclerView.Adapter<MainRecylerAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecylerAdapter.ViewHolder {
+class MainRecyclerAdapter(val news: JSONArray, private val itemClickListener: (View, Int, Int) -> Unit) : RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecyclerAdapter.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater.inflate(R.layout.item_dashboard_recycler, parent, false)
+
         return ViewHolder(view)
     }
 
@@ -23,17 +25,18 @@ class MainRecylerAdapter(val news: JSONArray) : RecyclerView.Adapter<MainRecyler
         return news.length()
     }
 
-    override fun onBindViewHolder(holder: MainRecylerAdapter.ViewHolder, position: Int) {
-        holder.bind(news.getJSONObject(position), position)
+    override fun onBindViewHolder(holder: MainRecyclerAdapter.ViewHolder, position: Int) {
+
+        holder.bind(news.getJSONObject(position), itemClickListener)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(newsItem: JSONObject, position: Int) {
+        fun bind(newsItem: JSONObject, itemClickListener: (View, Int, Int) -> Unit) {
             val txtDescription = view.findViewById(R.id.txt_news_description) as TextView
             val txtTitle = view.findViewById(R.id.txt_news_title) as TextView
             val txtCategory = view.findViewById(R.id.txt_news_category) as TextView
-            val cover = view.findViewById<ImageView>(R.id.img_cover)
+            val cover = view.findViewById(R.id.img_cover) as ImageView
 
             val newsCategory = newsItem.getJSONObject("primaryTag").getString("name")
             val newsImageArray = newsItem.getJSONArray("images").getJSONObject(0)
@@ -51,7 +54,8 @@ class MainRecylerAdapter(val news: JSONArray) : RecyclerView.Adapter<MainRecyler
             txtTitle.text = newsItem["title"].toString()
             txtCategory.text = newsCategory
 
+            itemView.setOnClickListener { itemClickListener(view, adapterPosition, itemViewType) }
+
         }
     }
-
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -14,7 +15,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.faskn.sonranemioldu.R
-import com.faskn.sonranemioldu.adapters.MainRecylerAdapter
+import com.faskn.sonranemioldu.adapters.MainRecyclerAdapter
 import com.faskn.sonranemioldu.utils.BaseFragment
 import org.json.JSONObject
 
@@ -53,7 +54,13 @@ class MainFragment : BaseFragment() {
             val news = response
                     .getJSONArray("data")
 
-            newsRecyclerView.adapter = MainRecylerAdapter(news)
+            val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
+                newsRecyclerView.adapter!!.notifyDataSetChanged()
+                val newsFragment = NewsFragment.newInstance(position, JsonContentID)
+                val transaction: FragmentTransaction = fragmentManager?.beginTransaction()!!
+                transaction.add(R.id.frame_news, newsFragment, "newsFragment").commit()
+            }
+            newsRecyclerView.adapter = MainRecyclerAdapter(news, itemClickListener = itemOnClick)
         },
                 Response.ErrorListener {
                     Toast.makeText(this.context, "That didn't work!", Toast.LENGTH_SHORT).show()
@@ -61,6 +68,7 @@ class MainFragment : BaseFragment() {
 
         Volley.newRequestQueue(this.context).add(request)
         Volley.newRequestQueue(this.context).start()
+
 
     }
 }
